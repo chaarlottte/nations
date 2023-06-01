@@ -17,7 +17,6 @@ On the frontend, the project uses [SvelteKit](https://kit.svelte.dev/). There is
 ## Plans
 Below is the database schema that ChatGPT told me to make (lmao). I've been following it for the basic outline, but I'll probably rework it a bit later on.
 
-```
 ### Table: Players
 | Column             | Example                |
 | ------------------ | ---------------------- |
@@ -64,6 +63,5 @@ Below is the database schema that ChatGPT told me to make (lmao). I've been foll
 | nation2_id              | 2                      |
 | relationship_status    | Allied                 |
 | last_interaction_date  | 2023-05-30             |
-```
 
 Again, these are very early concepts, and they will most certainly need to be reworked.
