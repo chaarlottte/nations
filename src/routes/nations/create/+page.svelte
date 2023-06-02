@@ -1,5 +1,6 @@
 <script lang="ts">
     import { pb, currentUser } from "$lib/pocketbase";
+    import { setLocalNation } from "$lib/inventories/inventory";
     import { goto } from "$app/navigation";
     import { redirect } from "@sveltejs/kit";
     import { onMount } from "svelte";
@@ -36,7 +37,9 @@
         const respJson = await response.json();
 
         if(response.ok) {
-            goto(`/nations/${respJson.id}`);
+            setLocalNation(respJson.id);
+            // goto(`/nations/${respJson.id}`);
+            await goto("/dashboard");
         } else {
             if(respJson.data.name) {
                 if(respJson.data.name.code === "validation_not_unique")
@@ -58,7 +61,7 @@
     });
 </script>
 
-{stage}
+{$currentUser?.nation}
 {#if $currentUser?.nation === ""}
     <p>Allowed to create nation</p>
     {#if stage == 0}

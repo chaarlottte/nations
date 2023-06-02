@@ -10,7 +10,9 @@
 
     async function login() {
         try {
-            await pb.collection("users").authWithPassword(username, password);
+            await pb.collection("users").authWithPassword(username, password, {}, {
+                expand: "nation"
+            });
         } catch(ex) {
             if(ex instanceof ClientResponseError) {
                 error = JSON.stringify(ex.response);

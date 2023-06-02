@@ -18,14 +18,16 @@ export async function POST({ request }) {
         denonym,
         continent,
         leader,
-        "stats": {},
+        "inventory": {},
         "population": 1000
     };
 
 	try {
         const record = await adminClient.collection("nations").create(nationData);
+        await adminClient.collection("users").update(leader, { nation: record.id });
         return json(record, { status: 201 });
     } catch(ex: any) {
+        console.log(ex)
         return json(ex.response, { status: ex.response.code });
     }
 }
