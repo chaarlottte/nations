@@ -11,7 +11,7 @@
     if(user?.nation !== "") {
         user.nation = user?.expand.nation;
     }
-    
+
     onMount(async () => {
         if($currentUser === null) {
             goto("/users/login");

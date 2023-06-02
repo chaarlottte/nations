@@ -29,24 +29,39 @@
     {goto("/users/@me")}
 {:else}
     <form on:submit|preventDefault>
-        <input
-            placeholder="Username"
-            type="text"
-            bind:value={username}
-        />
+        <div class="input-box">
+            <input
+                placeholder="Username"
+                type="text"
+                bind:value={username}
+            />
+        </div>
 
-        <input
-            placeholder="Password"
-            type="password"
-            bind:value={password}
-        />
+        <div class="input-box">
+            <input
+                placeholder="Password"
+                type="password"
+                bind:value={password}
+            />
+        </div>
 
-        <button on:click={login}>Login</button>
+        <button class="input-box-leftonly" on:click={login}>Login</button>
 
-        <p>Don't have an account? <a href="/users/signup">Sign up instead.</a></p>
+        <p class="input-box-leftonly">Don't have an account? <a href="/users/signup">Sign up instead.</a></p>
     </form>
 
     {#if error}
         <p style="color: red;">{error}</p>
     {/if}
 {/if}
+
+<style>
+    .input-box {
+        margin-left: 10px;
+        margin-bottom: 10px;
+    }
+
+    .input-box-leftonly {
+        margin-left: 10px;
+    }
+</style>

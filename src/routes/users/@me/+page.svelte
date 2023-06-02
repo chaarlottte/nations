@@ -6,7 +6,7 @@
 
     function signOut() {
         pb.authStore.clear();
-        redirect(300, "/login");
+        goto("/users/login");
     }
 
     onMount(async () => {
@@ -17,6 +17,6 @@
 </script>
 
 {#if $currentUser}
-    <h2>Hello, {$currentUser?.username}!</h2>
+    <h2>Hello, {$currentUser?.nickname}!</h2>
     <button on:click={signOut}>Sign Out</button>
 {/if}

@@ -5,6 +5,7 @@
     import { onMount } from "svelte";
 
     let username: string;
+    let nickname: string;
     let password: string;
     let error: string;
 
@@ -18,18 +19,35 @@
         }
     }
 
-    async function signUp() {
-        try {
-            const data = {
-                username,
-                password,
-                passwordConfirm: password
-            };
-            const createdUser = await pb.collection("users").create(data);
-            await login();
-        } catch(ex) {
-            console.log(ex);
+    async function register() {
+        if(username.includes(" ")) {
+            error = "Username must be lowercase.";
+            return;
         }
+        const userData = {
+            "username": username,
+            // "email": "test@example.com",
+            // "emailVisibility": false,
+            "password": password,
+            "passwordConfirm": password,
+            "nickname": nickname
+        };
+
+        await pb.collection("users").create(userData);
+        await login();
+        await goto("/users/@me");
+    }
+
+    function checkUsernameEvent(event: any) {
+        if (event.srcElement.value.includes(" ")) {
+            error = "Username canot contain spaces!";
+        } else {
+            error = "";
+        }
+    }
+
+    const setName = (event: any) => {
+        username = event.target.value.toLowerCase();
     }
 
     onMount(async () => {
@@ -43,24 +61,50 @@
     {goto("/users/@me")}
 {:else}
     <form on:submit|preventDefault>
-        <input
-            placeholder="Username"
-            type="text"
-            bind:value={username}
-        />
+        <div class="input-box">
+            <input
+                placeholder="Username"
+                type="text"
+                on:input={setName}
+            />
+            {#if username}
+                <p style="font-size: medium;">Your username will be <strong>@{username}</strong></p>
+            {/if}
+        </div>
 
-        <input
-            placeholder="Password"
-            type="password"
-            bind:value={password}
-        />
+        <div class="input-box">
+            <input
+                placeholder="Nickname"
+                type="text"
+                bind:value={nickname}
+            />
+        </div>
 
-        <button on:click={signUp}>Sign up</button>
+        <div class="input-box">
+            <input
+                placeholder="Password"
+                type="password"
+                bind:value={password}
+            />
+        </div>
 
-        <p>Already have an account? <a href="/users/login">Log in instead.</a></p>
+        <button class="input-box-leftonly" on:click={register}>Sign up</button>
+
+        <p class="input-box-leftonly">Already have an account? <a href="/users/login">Log in instead.</a></p>
     </form>
 
     {#if error}
-        <p style="color: red;">{error}</p>
+        <p style="color: red;" class="input-box-leftonly">{error}</p>
     {/if}
 {/if}
+
+<style>
+    .input-box {
+        margin-left: 10px;
+        margin-bottom: 10px;
+    }
+
+    .input-box-leftonly {
+        margin-left: 10px;
+    }
+</style>
