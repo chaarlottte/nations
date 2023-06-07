@@ -1,6 +1,5 @@
 <script lang="ts">
     import { pb, currentUser } from "$lib/pocketbase";
-    import { setLocalNation } from "$lib/inventories/inventory";
     import { goto } from "$app/navigation";
     import { redirect } from "@sveltejs/kit";
     import { onMount } from "svelte";
@@ -37,7 +36,6 @@
         const respJson = await response.json();
 
         if(response.ok) {
-            setLocalNation(respJson.id);
             // goto(`/nations/${respJson.id}`);
             await goto("/dashboard");
         } else {

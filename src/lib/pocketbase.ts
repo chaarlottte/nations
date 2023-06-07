@@ -1,15 +1,44 @@
-import { writable } from "svelte/store";
+import { writable, get } from "svelte/store";
 import Client from "pocketbase";
 
 export const POCKETBASE_URL = "http://127.0.0.1:8090";
 
 export const pb = new Client(POCKETBASE_URL);
 export const currentUser = writable(pb.authStore.model);
+export const userNation = writable({});
 
-pb.authStore.onChange((auth) => {
+pb.authStore.onChange(async (auth) => {
     console.log(`New user: ${auth}`);
     currentUser.set(pb.authStore.model);
 });
+
+/*pb.collection("nations").subscribe("*", function(e) {
+    console.log(e.record);
+});
+
+pb.collection("resourceInventory").subscribe("*", function(e) {
+    console.log(e.record);
+});*/
+
+export async function getNationData(nationID: string = "") {
+    if(nationID === "")
+        nationID = get(currentUser)?.nation;
+
+    if(nationID !== "") {
+        const nationRecord = await pb.collection("nations").getOne(nationID);
+        const resourceList = await pb.collection("resourceInventory").getList(1, 50, {
+            filter: `nation = "${nationID}"`,
+            expand: "resourceType"
+        });
+
+        return {
+            nationData: nationRecord,
+            resources: resourceList.items
+        }
+    } else {
+        return {};
+    }
+}
 
 // Authentication related functions
 export async function register(
